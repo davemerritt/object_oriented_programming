@@ -33,3 +33,12 @@ class Exempt < Goods
 	end
 end
 
+class Cart
+
+	attr_accessor :items
+
+	def initialize
+		@items = items
+	end
+
+end
