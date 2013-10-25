@@ -1,3 +1,4 @@
+
 class Goods
 
 	attr_accessor :quantity, :name, :price
@@ -35,10 +36,11 @@ end
 
 class Cart
 
-	attr_accessor :items
-
 	def initialize
-		@items = items
+		@receptacle []
 	end
 
+	def add_item(item)
+		@receptacle << item
+	end
 end
