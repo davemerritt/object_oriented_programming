@@ -46,15 +46,36 @@ class Cart
 	#this isn't done
 end
 
-book = Exempt.new(1, "book", 12.49)
-cd = Goods.new(1, "cd", 14.99)
-chocolate = Exempt.new(1, "chocolate", 0.85)
+#first cart
+book = Exempt.new(1, "Book", 12.49)
+cd = Goods.new(1, "Music CD", 14.99)
+chocolate = Exempt.new(1, "Chocolate", 0.85)
 
-imp_cholate1 = Imported.new(1, "imp_cholate1", 10.00)
-imp_perf1 = Imported.new(1, "imp_perf1", 47.50)
+#second cart
+imp_cholate1 = Imported.new(1, "Imported Chocolate", 10.00)
+imp_perf1 = Imported.new(1, "Imported Perfume", 47.50)
 
-imp_perf2 = Imported.new(1, "imp_perf2", 27.99)
-perfume = Goods.new(1, "perfume", 18.99)
-head_pills = Exempt.new(1, "head_pills", 9.75)
-imp_cholate2 = Imported.new(1, "imp_cholate2", 11.25)
-#throws errors lol ok, maybe not just a "."" instead of ","" I need sleep.
+#third cart
+imp_perf2 = Imported.new(1, "Imported Perfume", 27.99)
+perf = Goods.new(1, "Perfume", 18.99)
+head_pills = Exempt.new(1, "Packet of Headache Pills", 9.75)
+imp_cholate2 = Imported.new(1, "Imported Chocolate", 11.25)
+
+#put things into carts
+cart1 = Cart.new 
+cart1.add_item(book)
+cart1.add_item(cd)
+cart1.add_item(chocolate)
+
+
+cart2 = Cart.new 
+cart2.add_item(imp_cholate1)
+cart2.add_item(imp_perf1)
+
+cart3 = Cart.new 
+cart3.add_item(imp_perf2)
+cart3.add_item(perf)
+cart3.add_item(head_pills)
+cart3.add_item(imp_cholate2)
+
+#Still not there, but it's a start
