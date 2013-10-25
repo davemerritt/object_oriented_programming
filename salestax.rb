@@ -1,6 +1,15 @@
+#No floats until value is returned for end result.
+module Utils
+  def self.round(amount)
+    return amount if (amount % 5) == 0
+    amount + 5 - (amount % 5)
+  end
 
+#Goods takes the the total value of the items, given by the cart, 
+#applies the appropriate tax, and then should spit it back out, 
+#with floats. 
 class Goods
-
+	include Utils 
 	attr_accessor :quantity, :name, :price
 
 	def initialize(quantity, name, price)
@@ -9,32 +18,33 @@ class Goods
 		@price = price		
 	end
 
+	def tax_rate
+	  0.10
+	end
+
 	def sub_total
 		@price * @quantity
 	end
 
-	def sales_tax
-	  0.10
-	end
-
 	def total
-		subtotal + sales_tax
+		subtotal + tax_rate
 	end
 end
 
 class Imported < Goods
-	def sales_tax
+	def tax_rate
 		super + 0.05
 	end	
 end
 
 class Exempt < Goods
-	def sales_tax
+	def tax_rate
 		0
 	end
 end
 
 class Cart
+	include Utils
 
 	def initialize
 		@receptacle []
@@ -43,7 +53,13 @@ class Cart
 	def add_item(item)
 		@receptacle << item
 	end
-	#this isn't done
+
+	def calc
+	total = 0
+	sales_tax = 0
+
+	end
+
 end
 
 #first cart
@@ -58,6 +74,7 @@ imp_perf1 = Imported.new(1, "Imported Perfume", 47.50)
 #third cart
 imp_perf2 = Imported.new(1, "Imported Perfume", 27.99)
 perf = Goods.new(1, "Perfume", 18.99)
+#you can't tell me these were incidental
 head_pills = Exempt.new(1, "Packet of Headache Pills", 9.75)
 imp_cholate2 = Imported.new(1, "Imported Chocolate", 11.25)
 
@@ -77,5 +94,3 @@ cart3.add_item(imp_perf2)
 cart3.add_item(perf)
 cart3.add_item(head_pills)
 cart3.add_item(imp_cholate2)
-
-#Still not there, but it's a start
