@@ -1,3 +1,4 @@
+#Working through Chris's answer, to understand how it works. 
 #No floats until value is returned for end result.
 module Utils
   def self.round(amount)
@@ -6,8 +7,7 @@ module Utils
   end
 
 #Goods takes the the total value of the items, given by the cart, 
-#applies the appropriate tax, and then should spit it back out, 
-#with floats. 
+#applies the appropriate tax, and then should spit it back out.
 class Goods
 	include Utils 
 	attr_accessor :quantity, :name, :price
@@ -20,6 +20,10 @@ class Goods
 
 	def tax_rate
 	  0.10
+	end
+#.ceil rounds up
+	def sales_tax
+	 Utils.round (tax_rate * tax_rate).ceil
 	end
 
 	def sub_total
@@ -56,7 +60,7 @@ class Cart
 
 	def calc
 	total = 0
-	sales_tax = 0
+
 
 	end
 
