@@ -1,13 +1,14 @@
-#Working through Chris's answer, to understand how it works. 
-#No floats until value is returned for end result.
 module Utils
   def self.round(amount)
     return amount if (amount % 5) == 0
     amount + 5 - (amount % 5)
   end
 
-#Goods takes the the total value of the items, given by the cart, 
-#applies the appropriate tax, and then should spit it back out.
+  def self.format_price(price)
+    sprintf("%.2f", price / 100.00)
+  end
+end
+
 class Goods
 	include Utils 
 	attr_accessor :quantity, :name, :price
@@ -21,9 +22,9 @@ class Goods
 	def tax_rate
 	  0.10
 	end
-#.ceil rounds up
+
 	def sales_tax
-	 Utils.round (tax_rate * tax_rate).ceil
+		subtotal * tax_rate
 	end
 
 	def sub_total
@@ -49,9 +50,11 @@ end
 
 class Cart
 	include Utils
+	
+	attr_accessor :receptacle
 
 	def initialize
-		@receptacle []
+		@receptacle = []
 	end
 
 	def add_item(item)
@@ -59,11 +62,14 @@ class Cart
 	end
 
 	def calc
-	total = 0
+		total = 0
+		sales_tax = 0
 
-
+		Goods.each do |goods|
+		@sales_tax += goods.sales_tax
+		@total += product.total
+		end
 	end
-
 end
 
 #first cart
@@ -98,3 +104,7 @@ cart3.add_item(imp_perf2)
 cart3.add_item(perf)
 cart3.add_item(head_pills)
 cart3.add_item(imp_cholate2)
+
+puts cart1
+puts cart2
+puts cart3
