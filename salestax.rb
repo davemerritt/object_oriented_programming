@@ -1,7 +1,7 @@
 module Utils
-  def self.round(amount)
-    return amount if (amount % 5) == 0
-    amount + 5 - (amount % 5)
+  def self.round(price)
+    return price if (price % 5) == 0
+    price + 5 - (price % 5)
   end
 
   def self.format_price(price)
@@ -10,101 +10,108 @@ module Utils
 end
 
 class Goods
-	include Utils 
-	attr_accessor :quantity, :name, :price
+  attr_accessor :quantity, :name, :price
 
-	def initialize(quantity, name, price)
-		@quantity = quantity
-		@name = name
-		@price = price		
-	end
+  def initialize(quantity, name, price)
+    @quantity = quantity
+    @name = name
+    @price = price * 100
+  end
 
-	def tax_rate
-	  0.10
-	end
+  def subtotal
+    @quantity * @price
+  end
 
-	def sales_tax
-		subtotal * tax_rate
-	end
+  def sales_tax
+    Utils::round (subtotal * tax_rate.ceil)
+  end
 
-	def sub_total
-		@price * @quantity
-	end
+  def total
+    subtotal + sales_tax
+  end
 
-	def total
-		subtotal + tax_rate
-	end
+  def tax_rate
+    0.10
+  end
+
+  def display
+    "#{@quantity} #{@name} : #{Utils.format_price(total)}"
+  end
 end
 
 class Imported < Goods
-	def tax_rate
-		super + 0.05
-	end	
+  def tax_rate
+    super  * 0.05
+  end
 end
 
 class Exempt < Goods
-	def tax_rate
-		0
-	end
+  def tax_rate
+    0
+  end
 end
 
-class Cart
-	include Utils
-	
-	attr_accessor :receptacle
-
-	def initialize
-		@receptacle = []
-	end
-
-	def add_item(item)
-		@receptacle << item
-	end
-
-	def calc
-		total = 0
-		sales_tax = 0
-
-		Goods.each do |goods|
-		@sales_tax += goods.sales_tax
-		@total += product.total
-		end
-	end
+class ImportedExempt < Exempt
+  def tax_rate
+    super + 0.5
+  end
 end
 
-#first cart
-book = Exempt.new(1, "Book", 12.49)
-cd = Goods.new(1, "Music CD", 14.99)
-chocolate = Exempt.new(1, "Chocolate", 0.85)
+class Shoppingcart < Goods
+  def initialize
+    @products = []
+  end
 
-#second cart
-imp_cholate1 = Imported.new(1, "Imported Chocolate", 10.00)
-imp_perf1 = Imported.new(1, "Imported Perfume", 47.50)
+  def add_cart(product)
+    @products << product
+  end
 
-#third cart
-imp_perf2 = Imported.new(1, "Imported Perfume", 27.99)
-perf = Goods.new(1, "Perfume", 18.99)
-#you can't tell me these were incidental
-head_pills = Exempt.new(1, "Packet of Headache Pills", 9.75)
-imp_cholate2 = Imported.new(1, "Imported Chocolate", 11.25)
+  def calculate
+    @total = 0
+    @sales_tax = 0
 
-#put things into carts
-cart1 = Cart.new 
-cart1.add_item(book)
-cart1.add_item(cd)
-cart1.add_item(chocolate)
+    @products.each do |product|
+      @sales_tax += product.sales_tax
+      @total += product.total
+    end
+  end
 
+  def receipt
+    calculate 
 
-cart2 = Cart.new 
-cart2.add_item(imp_cholate1)
-cart2.add_item(imp_perf1)
+    results = ""
+    @products.each {|p| results += "#{p.display}\n"}
 
-cart3 = Cart.new 
-cart3.add_item(imp_perf2)
-cart3.add_item(perf)
-cart3.add_item(head_pills)
-cart3.add_item(imp_cholate2)
+    results += "Sales Tax: #{Utils::format_price(@sales_tax)}\n"
+    results += "Total: #{Utils::format_price(@total)}"
+end
 
-puts cart1
-puts cart2
-puts cart3
+cart = Shoppingcart.new
+
+cart.add_cart Exempt.new(1, "book", 12.49)
+cart.add_cart Goods.new(1, "music CD", 14.99)
+cart.add_cart Exempt.new(1, "chocolate bar", 0.85)
+
+puts cart.receipt
+
+puts
+
+cart = Shoppingcart.new
+
+cart.add_cart ImportedExempt.new(1, "imported chocolates", 10.00)
+cart.add_cart Exempt.new(1, "imported perfume", 47.50)
+
+puts cart.receipt
+
+puts
+
+cart = Shoppingcart.new
+
+cart.add_cart Imported.new(1, "imported perfume", 27.99)
+cart.add_cart Goods.new(1, "perfume", 18.99)
+cart.add_cart Exempt.new(1, "packet of headache pills", 9.75)
+cart.add_cart ImportedExempt.new(1, "imported chocolates", 11.25)
+
+puts cart.receipt
+
+end
